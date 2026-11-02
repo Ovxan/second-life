@@ -1,24 +1,17 @@
 # Second Life
 
-Website marketplace sirkular untuk mahasiswa dan alumni: jual beli barang bekas, donasi, dan informasi jasa reparasi.
+Marketplace sirkular untuk mahasiswa dan alumni: jual beli, donasi, dan jasa reparasi.
 
-## Menjalankan
+**Buka web:** https://ovxan.github.io/second-life/
 
-Buka `index.html` langsung melalui browser. Semua CSS, JavaScript, dan foto ilustrasi sudah tertanam dalam satu file. Tidak membutuhkan akun, layanan login, API, atau instalasi paket.
+- `index.html`: web siap pakai dalam satu berkas. CSS, JavaScript, dan tujuh foto ilustrasi sudah tertanam. Katalog dan foto pengguna tersimpan di Supabase sehingga memerlukan internet.
+- `second-life-source.zip`: seluruh kode sumber yang dapat diedit, aset asli, konfigurasi publik, lockfile, skrip build, dan tes. Ekstrak folder `second-life`, jalankan `pnpm install`, `pnpm exec tsc --noEmit`, `pnpm test`, dan `pnpm build`. Hasilnya adalah `index.html`. Petunjuk lengkap ada pada README di dalam arsip.
+- `database.sql`: salinan migrasi yang **sudah diterapkan** pada proyek Supabase. Jangan dijalankan ulang pada proyek yang sama.
 
-## Fitur
+Pengunjung bisa membaca tanpa login. Sesi tamu dibuat saat pertama memasang iklan atau menyimpan favorit asli. Akses edit tersimpan pada browser dan perangkat yang sama; menghapus data browser atau memakai mode privat dapat menghilangkan akses pemilik. Belum ada pemulihan atau pemindahan akses antarperangkat. Katalog aktif dan foto bersifat publik, sementara edit/hapus dan favorit dibatasi melalui Row Level Security.
 
-- Pencarian, kategori, filter kondisi/lokasi/harga, dan pengurutan.
-- Katalog jual beli dan donasi, detail barang, serta favorit.
-- Formulir pasang barang, foto, edit, hapus, dan perubahan status.
-- Informasi jasa reparasi dan tautan kontak WhatsApp untuk iklan yang diisi sendiri.
+Nama dan WhatsApp ditayangkan setelah persetujuan pada formulir. Transaksi berlangsung langsung melalui WhatsApp. Pembayaran otomatis dan biaya layanan belum diaktifkan. Iklan berlabel “Contoh” adalah demonstrasi, bukan penawaran asli. Pengguna versi lama dapat memilih memindahkan iklan lewat Barang saya dengan persetujuan publikasi kontak.
 
-Iklan dan favorit tersimpan di browser perangkat masing-masing. Data tidak dibagikan atau disinkronkan antarpengguna. Barang berlabel Contoh dan foto ilustrasi bukan penawaran asli. Pembayaran biaya layanan belum diaktifkan.
+Hanya URL proyek dan publishable key publik yang disertakan. Tidak ada secret key, password database, atau token sesi di berkas.
 
-## GitHub Pages
-
-Simpan `index.html` dan `.nojekyll` pada direktori utama repositori. Di Settings → Pages, pilih Deploy from a branch, branch `main`, folder `/(root)`, lalu Save.
-
-## Foto ilustrasi
-
-Foto diperoleh dari Unsplash dan dipakai sebagai ilustrasi katalog contoh.
+Validasi: TypeScript, build HTML satu berkas, 24 pemeriksaan kebijakan PostgreSQL/integritas, dan 15 pengujian langsung dengan dua sesi pengunjung. Foto ilustrasi: Unsplash. Identitas kampus belum diverifikasi dan moderasi admin belum tersedia.
