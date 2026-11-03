@@ -16,7 +16,7 @@ Jangan menjalankan ulang migrasi pada proyek online yang sama. Untuk proyek baru
 
 ## Akun dan admin
 
-Katalog dapat dibaca tanpa login. Pemasangan barang dan tagihan memerlukan akun dengan email terkonfirmasi dan password. Akun biasa hanya mengubah iklannya sendiri. Pemilik yang terdaftar pada site_admins mengelola seluruh katalog; hanya admin dapat menambah atau mengubah jasa reparasi. Akun pemilik pertama pada proyek ini sudah diberi peran admin. Password diisi sendiri oleh pemilik melalui formulir akun, tidak disimpan pada kode.
+Katalog dapat dibaca tanpa login. Pemasangan barang dan tagihan memerlukan akun dengan email terkonfirmasi dan password. Akun biasa hanya mengubah iklannya sendiri. Pemilik yang terdaftar pada site_admins mengelola seluruh katalog; hanya admin dapat menambah atau mengubah jasa reparasi. Pemilik masuk melalui Masuk/Daftar. Setelah database memverifikasi peran pemilik, halaman Akun menampilkan Dashboard pemilik serta Penagihan & pendapatan. Menu pengelolaan hanya tampil untuk pemilik yang sudah login. Akun pemilik pertama pada proyek ini sudah diberi peran admin. Password diisi sendiri oleh pemilik melalui formulir akun, tidak disimpan pada kode.
 
 Sesi tamu versi lama tetap disimpan. Daftar dari browser yang masih menyimpan sesi tersebut untuk menghubungkan email dan mempertahankan kepemilikan iklan. Login ke akun baru tidak otomatis memindahkan iklan lama.
 
@@ -42,6 +42,6 @@ Email/password dan konfirmasi email diaktifkan. Sesi anonim baru dinonaktifkan. 
 
 ## Pemeriksaan
 
-Pembaruan ini diperiksa dengan TypeScript, build HTML satu berkas, 43 pemeriksaan kebijakan katalog/akun/admin, 20 pengujian harga, dan 50 pemeriksaan status, akuntansi, privasi, serta izin tagihan di PostgreSQL/PGlite. Pemeriksaan backend online menggunakan akses publik dan permintaan yang ditolak tanpa membuat akun atau tagihan uji. Belum ada transfer uang atau pengujian pembayaran nyata; tujuan pembayaran masih perlu diisi pemilik.
+Pembaruan ini diperiksa dengan TypeScript, build HTML satu berkas, 43 pemeriksaan kebijakan katalog/akun/admin, 20 pengujian harga, 50 pemeriksaan status, akuntansi, privasi, serta izin tagihan di PostgreSQL/PGlite, dan lima pemeriksaan visibilitas menu serta kesamaan sesi pemilik. Pemeriksaan backend online menggunakan akses publik dan permintaan yang ditolak tanpa membuat akun atau tagihan uji. Belum ada transfer uang atau pengujian pembayaran nyata; tujuan pembayaran masih perlu diisi pemilik.
 
 Iklan berlabel Contoh adalah demonstrasi, bukan penawaran asli. Foto ilustrasi: Unsplash. Identitas kampus belum diverifikasi; akun terdaftar bukan jaminan bebas penipuan.
