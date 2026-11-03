@@ -2,46 +2,45 @@
 
 Web publik: https://ovxan.github.io/second-life/
 
-Marketplace sirkular untuk mahasiswa dan alumni: jual beli, donasi, dan jasa reparasi. HTML mandiri memakai Supabase untuk katalog, akun, foto, dan tagihan bersama.
+Marketplace sirkular mahasiswa dan alumni untuk jual beli, donasi, dan jasa reparasi. HTML satu berkas memakai Supabase untuk akun, katalog, foto, dan tagihan bersama.
 
-## Berkas
+## Akun dan pengelolaan
 
-- index.html: HTML lengkap dengan CSS, JavaScript, dan foto ilustrasi tertanam.
-- second-life-source.zip: kode sumber lengkap, aset, skrip build, migrasi, dan tes. Ekstrak folder second-life lalu jalankan pnpm install, pnpm exec tsc --noEmit, pnpm test, dan pnpm build.
-- database.sql: migrasi katalog awal yang sudah diterapkan.
-- accounts-admin.sql: migrasi akun dan peran admin yang sudah diterapkan.
-- manual-billing.sql: migrasi tagihan dan bukti transfer privat yang sudah diterapkan.
+Pemilik dan anggota masuk melalui Masuk/Daftar. Akun terverifikasi dapat memasang barang dan mengelola iklannya sendiri. Menu Dashboard pemilik, pengelolaan jasa reparasi, dan Penagihan & pendapatan hanya muncul setelah peran pemilik diverifikasi database. Hak admin tetap diperiksa di database untuk setiap tindakan; menyembunyikan menu bukan satu-satunya perlindungan.
 
-Jangan menjalankan ulang migrasi pada proyek online yang sama. Untuk proyek baru, jalankan ketiganya satu kali sesuai urutan di atas.
+Akun pemilik pertama sudah diberi peran admin. Password diisi sendiri melalui alur email terverifikasi, tidak ditanam di HTML. Iklan lama tetap disimpan; konversi akun tamu perlu dilakukan dari browser yang menyimpan sesi lama agar kepemilikan tetap terhubung.
 
-## Akun dan admin
+## Harga dan tagihan penjual
 
-Katalog dapat dibaca tanpa login. Pemasangan barang dan tagihan memerlukan akun dengan email terkonfirmasi dan password. Akun biasa hanya mengubah iklannya sendiri. Pemilik yang terdaftar pada site_admins mengelola seluruh katalog; hanya admin dapat menambah atau mengubah jasa reparasi. Pemilik masuk melalui Masuk/Daftar. Setelah database memverifikasi peran pemilik, halaman Akun menampilkan Dashboard pemilik serta Penagihan & pendapatan. Menu pengelolaan hanya tampil untuk pemilik yang sudah login. Akun pemilik pertama pada proyek ini sudah diberi peran admin. Password diisi sendiri oleh pemilik melalui formulir akun, tidak disimpan pada kode.
+Pembeli membayar harga barang yang tercantum kepada penjual. Biaya admin tetap Rp5.000 dan menjadi kewajiban penjual setelah barang berstatus Terjual. Contoh: harga barang Rp100.000, pembayaran pembeli Rp100.000, biaya admin penjual Rp5.000, sisa setelah biaya admin Rp95.000. Donasi dan informasi jasa reparasi tanpa biaya admin platform. Tidak ada promo atau biaya tambahan pembeli yang diaktifkan.
 
-Sesi tamu versi lama tetap disimpan. Daftar dari browser yang masih menyimpan sesi tersebut untuk menghubungkan email dan mempertahankan kepemilikan iklan. Login ke akun baru tidak otomatis memindahkan iklan lama.
+Setelah bertransaksi langsung dan menerima pembayaran barang, penjual mengubah status iklannya menjadi Terjual. Notifikasi pembayaran biaya admin muncul dengan tombol untuk membuka tagihan; penjual dapat memilih Nanti dan membukanya kembali melalui Tagihan saya. Database menyimpan status Terjual dan menerbitkan satu tagihan Rp5.000 ke akun penjual dalam transaksi yang sama. Tidak ada kode atau akun pembeli yang harus dimasukkan. Jika perubahan status gagal, tagihan juga dibatalkan oleh transaksi database. Pengulangan konfirmasi memakai tagihan yang sama. Tersedia dan Dalam proses tidak memicu tagihan. Moderator yang menyelesaikan iklan orang lain tetap menagih pemilik asli iklan.
 
-## Harga dan penagihan manual
+Tagihan muncul pada Tagihan saya milik penjual. Halaman memantau perubahan privat dengan realtime dan pembaruan saat kembali ke tab. Jika tujuan transfer belum aktif, tagihan menunggu tujuan pembayaran; penjualan tetap dapat dicatat. Pengelola mengisi bank/e-wallet melalui Penagihan & pendapatan. Saat diaktifkan, tujuan diisikan satu kali pada tagihan yang masih kosong; tujuan yang sudah tersimpan pada tagihan lama tidak diganti.
 
-Harga barang + biaya admin Rp5.000 menjadi total pembeli. Contoh: Rp100.000 untuk penjual + Rp5.000 untuk pengelola = total Rp105.000. Penjual menerima harga barang penuh. Donasi dan informasi jasa reparasi tanpa biaya admin platform. Tidak ada promo potongan biaya admin.
+Penjual mentransfer Rp5.000 dan mengunggah bukti JPG/PNG/WebP maksimal 2 MB. Admin mencocokkan nominal, waktu, dan pengirim dengan mutasi penerima sebelum mengonfirmasi Lunas. Tagihan belum dibayar atau bukti yang perlu diperbaiki dapat dibatalkan oleh admin jika penjualan memang dibatalkan. Penjual tidak dapat menghapus kewajiban penjualan yang aktif atau mengonfirmasi tagihannya sendiri. Penghapusan iklan tidak menghapus arsip tagihan. Status Terjual dan status Lunas biaya admin adalah dua hal terpisah.
 
-1. Admin membuka https://ovxan.github.io/second-life/#adminbilling, mengisi rekening bank/e-wallet milik pengelola, dan mengaktifkan penagihan. Tanpa tujuan aktif, database menolak tagihan baru.
-2. Pembeli menyelesaikan jual beli dan membayar harga barang langsung ke penjual.
-3. Pembeli membuat tagihan biaya admin dari detail barang atau dari tautan barang melalui halaman Tagihan. Tautan tetap bisa dipakai jika barang sudah ditandai Terjual. Satu iklan mempunyai satu tagihan aktif agar biaya tidak ditagih ganda.
-4. Pembeli mentransfer Rp5.000 ke tujuan pada tagihan dan mengunggah bukti maksimal 2 MB. Tujuan transfer serta harga pada tagihan tersimpan saat dibuat; perubahan pengaturan tidak mengubah tagihan lama.
-5. Admin mencocokkan bukti dengan mutasi rekening/e-wallet lalu mengonfirmasi Lunas atau meminta perbaikan dengan alasan. Pembeli dapat memperbaiki bukti yang ditolak.
+Biaya tetap Rp5.000 juga berarti sisa penjual dapat negatif jika harga barang kurang dari Rp5.000. Formulir menampilkan peringatan dan rincian sebelum iklan ditayangkan; tidak ada potongan biaya admin yang diasumsikan otomatis.
 
-Status: Belum dibayar, Menunggu verifikasi, Perlu perbaikan, Lunas, Dibatalkan. Rekap pendapatan hanya menghitung biaya admin terkonfirmasi, bukan harga barang. Rekap mencakup semua tagihan; daftar UI menampilkan 100 tagihan terbaru. Penandaan Terjual tidak otomatis membuktikan atau menagih biaya admin.
+Bukti tersimpan pada bucket privat second-life-receipts. Penanggung tagihan dan admin dapat membukanya dengan tautan gambar 60 detik. Riwayat bukti serta verifikasi dipertahankan. Tagihan sebelum perubahan kebijakan tetap mencatat penanggung dan pembayaran aslinya; tagihan lama yang belum diselesaikan perlu diperiksa admin sebelum penerbitan baru untuk barang yang sama. Pembayaran lama yang telah lunas tidak ditagih dua kali.
 
-Bukti disimpan pada bucket privat second-life-receipts, hanya dapat dibaca pembeli terkait dan admin dengan tautan gambar 60 detik. Riwayat verifikasi dan bukti sebelumnya disimpan. Menghapus iklan tidak menghapus arsip tagihan. Tagihan yang sedang diperiksa atau sudah lunas tidak dapat dibatalkan. Pembatalan tagihan belum dibayar tidak mengembalikan atau memindahkan uang; pengelola menangani refund transfer di luar web.
+Rekap pendapatan hanya mencakup biaya admin yang terverifikasi masuk. Harga barang serta tagihan yang belum dibayar tidak dihitung sebagai penerimaan. Daftar UI menampilkan 100 tagihan terbaru; rekap mencakup semua tagihan. Web tidak terhubung ke saldo bank/e-wallet, tidak memotong saldo otomatis, tidak menahan atau menyalurkan harga barang, dan tidak menjalankan refund uang. Pengelola menangani pengecekan transfer dan refund di luar web.
 
-Tidak ada koneksi bank, payment gateway, debit/potongan otomatis, atau penyaluran harga barang melalui platform. Penagihan manual bergantung pada pembeli membuat tagihan dan pengelola memeriksa transfer.
+## Berkas dan instalasi
 
-## Pengiriman email
+- index.html: HTML lengkap dengan skrip, CSS, dan foto ilustrasi tertanam.
+- second-life-source.zip: sumber lengkap, aset, migrasi, skrip build, dan tes. Ekstrak second-life, lalu jalankan pnpm install, pnpm exec tsc --noEmit, pnpm test, dan pnpm build.
+- database.sql: migrasi katalog awal.
+- accounts-admin.sql: migrasi akun serta peran pemilik.
+- manual-billing.sql: struktur awal tagihan serta bukti privat.
+- sold-billing.sql: migrasi lanjutan untuk tagihan penjual otomatis setelah Terjual.
 
-Email/password dan konfirmasi email diaktifkan. Sesi anonim baru dinonaktifkan. Layanan pengirim email khusus (SMTP) belum diaktifkan, sehingga pendaftaran pengunjung umum masih menunggu konfigurasi pengirim. Atur kredensial SMTP hanya melalui Supabase, bukan pada HTML/repository. Jangan mematikan verifikasi email untuk mengatasi kendala pengiriman.
+Untuk proyek baru, jalankan keempat migrasi satu kali sesuai urutan di atas. Jangan menjalankan ulang migrasi yang sudah diterapkan pada proyek yang sama. URL proyek dan publishable key boleh berada pada kode; secret key, password database, dan kredensial SMTP tidak boleh dimasukkan ke repository.
 
-## Pemeriksaan
+## Email dan pemeriksaan
 
-Pembaruan ini diperiksa dengan TypeScript, build HTML satu berkas, 43 pemeriksaan kebijakan katalog/akun/admin, 20 pengujian harga, 50 pemeriksaan status, akuntansi, privasi, serta izin tagihan di PostgreSQL/PGlite, dan lima pemeriksaan visibilitas menu serta kesamaan sesi pemilik. Pemeriksaan backend online menggunakan akses publik dan permintaan yang ditolak tanpa membuat akun atau tagihan uji. Belum ada transfer uang atau pengujian pembayaran nyata; tujuan pembayaran masih perlu diisi pemilik.
+Email/password serta konfirmasi email diaktifkan. Pendaftaran pengunjung umum masih memerlukan pengaturan layanan email khusus (SMTP). Kredensialnya hanya diatur di Supabase; konfirmasi email tetap dipertahankan.
+
+Pengujian lokal mencakup harga, RLS dan peran pemilik, tagihan penjual, migrasi riwayat lama, kegagalan transaksi, idempotensi, tujuan transfer, bukti privat, dan visibilitas menu. Pemeriksaan backend online menggunakan pembacaan publik dan permintaan yang wajib ditolak tanpa membuat akun, penjualan, atau tagihan uji. Belum ada transfer uang nyata yang diuji.
 
 Iklan berlabel Contoh adalah demonstrasi, bukan penawaran asli. Foto ilustrasi: Unsplash. Identitas kampus belum diverifikasi; akun terdaftar bukan jaminan bebas penipuan.
