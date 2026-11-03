@@ -26,6 +26,20 @@ Bukti tersimpan pada bucket privat second-life-receipts. Penanggung tagihan dan 
 
 Rekap pendapatan hanya mencakup biaya admin yang terverifikasi masuk. Harga barang serta tagihan yang belum dibayar tidak dihitung sebagai penerimaan. Daftar UI menampilkan 100 tagihan terbaru; rekap mencakup semua tagihan. Web tidak terhubung ke saldo bank/e-wallet, tidak memotong saldo otomatis, tidak menahan atau menyalurkan harga barang, dan tidak menjalankan refund uang. Pengelola menangani pengecekan transfer dan refund di luar web.
 
+## Pemeriksaan dokumen kampus
+
+Pemasangan iklan baru oleh anggota memerlukan konfirmasi email, password, dan satu pengajuan KTM atau bukti alumni yang disetujui admin. KTP, NIM, NIK, pencocokan biometrik, serta OTP WhatsApp tidak diterapkan. Pemilik web tetap memakai peran admin yang sudah disetujui untuk mengelola platform; peran ini tidak otomatis memberi label dokumen ditinjau pada iklan pemilik.
+
+Anggota membuka Akun saya, mengisi nama sesuai dokumen serta kampus, memilih KTM atau bukti alumni, membaca penggunaan data, lalu mengunggah foto JPG/PNG/WebP maksimal 2 MB. Foto diolah ulang menjadi JPEG dan metadata sumber tidak disalin. Minta pengguna menutup data yang tidak diperlukan seperti NIM, NIK, alamat, nomor rekening, barcode, atau QR. Dokumen hanya untuk pemeriksaan manual nama dan kampus, bukan validasi resmi database kampus atau jaminan transaksi.
+
+Pemilik masuk ke Akun pemilik → Pemeriksaan dokumen kampus, membuka foto privat, lalu menyetujui atau meminta perbaikan dengan alasan. Nama pada iklan baru ditetapkan database mengikuti dokumen yang disetujui. Label publik hanya menampilkan “Dokumen kampus ditinjau admin” dan nama kampus, untuk iklan yang nama pemiliknya sesuai. Dokumen, email akun, ID pengajuan, dan direktori identitas tidak disediakan melalui proyeksi publik.
+
+Bucket second-life-campus-documents bersifat privat dengan RLS. Hanya akun pengaju serta admin yang dapat membuka foto melalui tautan 60 detik. Pengunggahan hanya untuk draft yang diterbitkan server; berkas pengajuan terkirim tidak dapat diganti. Status persetujuan hanya dapat diubah melalui fungsi yang memeriksa peran admin, keadaan terbaru, dan keberadaan berkas. Satu pengajuan aktif per akun; maksimal lima pengajuan baru per hari. Admin tidak dapat menyetujui dokumennya sendiri.
+
+Setelah keputusan atau penarikan, aplikasi mencoba menghapus foto melalui Storage API dan mencatat penghapusan hanya setelah berkas benar-benar tidak ada. Jika gagal, akun pengaju dan admin melihat bahwa foto menunggu penghapusan serta dapat mencoba kembali. Foto draft yang ditinggalkan disimpan sampai pengajuan ditarik. Tidak ada pekerjaan terjadwal untuk menghapus dokumen. Nama, kampus, persetujuan, dan riwayat keputusan dipertahankan selama akun digunakan, sesuai penjelasan sebelum pengunggahan; foto tidak disertakan dalam repository atau arsip kode.
+
+Pengaju dapat menarik pengajuan atau mencabut persetujuannya sendiri. Admin dapat mencabut persetujuan dengan alasan. Pencabutan segera memblokir iklan baru di database dan menghilangkan label pada pembacaan katalog berikutnya. Katalog memperbarui data saat kembali ke tab dan berkala. Iklan lama tidak dihapus atau otomatis disetujui; pemilik tetap dapat mengelola barang dan membayar tagihannya selama menunggu. Tidak ada akun, dokumen, atau pengajuan nyata yang dibuat untuk pengujian.
+
 ## Berkas dan instalasi
 
 - index.html: HTML lengkap dengan skrip, CSS, dan foto ilustrasi tertanam.
@@ -34,13 +48,14 @@ Rekap pendapatan hanya mencakup biaya admin yang terverifikasi masuk. Harga bara
 - accounts-admin.sql: migrasi akun serta peran pemilik.
 - manual-billing.sql: struktur awal tagihan serta bukti privat.
 - sold-billing.sql: migrasi lanjutan untuk tagihan penjual otomatis setelah Terjual.
+- campus-verification.sql: migrasi pemeriksaan dokumen kampus dan pembatasan iklan baru.
 
-Untuk proyek baru, jalankan keempat migrasi satu kali sesuai urutan di atas. Jangan menjalankan ulang migrasi yang sudah diterapkan pada proyek yang sama. URL proyek dan publishable key boleh berada pada kode; secret key, password database, dan kredensial SMTP tidak boleh dimasukkan ke repository.
+Untuk proyek baru, jalankan kelima migrasi satu kali sesuai urutan di atas. Jangan menjalankan ulang migrasi yang sudah diterapkan pada proyek yang sama. URL proyek dan publishable key boleh berada pada kode; secret key, password database, dan kredensial SMTP tidak boleh dimasukkan ke repository.
 
 ## Email dan pemeriksaan
 
 Email/password serta konfirmasi email diaktifkan. Pendaftaran pengunjung umum masih memerlukan pengaturan layanan email khusus (SMTP). Kredensialnya hanya diatur di Supabase; konfirmasi email tetap dipertahankan.
 
-Pengujian lokal mencakup harga, RLS dan peran pemilik, tagihan penjual, migrasi riwayat lama, kegagalan transaksi, idempotensi, tujuan transfer, bukti privat, dan visibilitas menu. Pemeriksaan backend online menggunakan pembacaan publik dan permintaan yang wajib ditolak tanpa membuat akun, penjualan, atau tagihan uji. Belum ada transfer uang nyata yang diuji.
+Pengujian lokal mencakup harga, RLS dan peran pemilik, tagihan penjual, migrasi riwayat lama, kegagalan transaksi, idempotensi, tujuan transfer, bukti privat, pemeriksaan dokumen kampus beserta penarikan/pencabutan dan privasinya, serta visibilitas menu. Seluruh pengujian kebijakan memakai kelima migrasi; akun yang sudah disetujui pada tes adalah data simulasi terisolasi, bukan persetujuan otomatis pada proyek online. Pemeriksaan backend online menggunakan pembacaan publik dan permintaan yang wajib ditolak tanpa membuat akun, penjualan, atau tagihan uji. Belum ada transfer uang nyata yang diuji.
 
 Iklan berlabel Contoh adalah demonstrasi, bukan penawaran asli. Foto ilustrasi: Unsplash. Identitas kampus belum diverifikasi; akun terdaftar bukan jaminan bebas penipuan.
